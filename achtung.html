@@ -26,6 +26,7 @@ c.height = 600;
 
 var gLoop;
 var keysDown = {};
+var numPlaying = 0;
 
 var keyLeft = [49, 37, 90, 77];
 var keyRight = [81, 40, 88, 188];
@@ -65,7 +66,7 @@ var GameLoop = function() {
     if(!players[i].gameon) {
       continue;
     }
-    
+
     if(players[i].hasCollided(ctx)) {
       players[i].alive = 0;
     }
@@ -81,7 +82,7 @@ var GameLoop = function() {
 }
 
 var introScreen = function() {
-
+    numPlaying = 0;
     clearScreen();
 
     for(var i = 0; i < players.length; i++) {
@@ -105,16 +106,17 @@ var introScreen = function() {
 
     for(var i = 0; i < players.length; i++) {
       if(players[i].gameon) {
+        numPlaying++;
         ctx.fillStyle = players[i].color;
         ctx.fillText("READY", 300, 50+i*30);
       }
     }
 
-    if(32 in keysDown) {
+    if(32 in keysDown && numPlaying > 1) {
       clearScreen()
       GameLoop();
     } else {
-    gLoop = setTimeout(introScreen, 1000 / 60);
+      gLoop = setTimeout(introScreen, 1000 / 60);
     }
 
 }
