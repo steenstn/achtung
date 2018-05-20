@@ -15,7 +15,7 @@ var Player = (function () {
         }
         var xToCheck = this.x + 2 * Math.cos(this.angle);
         var yToCheck = this.y + 2 * Math.sin(this.angle);
-        var targetPixel = context.getImageData(xToCheck, yToCheck, 1, 1);
+        var targetPixel = context.getImageData(Math.round(xToCheck), Math.round(yToCheck), 1, 1);
         var r = targetPixel.data[0];
         var g = targetPixel.data[1];
         var b = targetPixel.data[2];
