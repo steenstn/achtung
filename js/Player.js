@@ -6,6 +6,8 @@ var Player = (function () {
         this.gameon = true;
         this.angle = Math.random() * 2 * Math.PI;
         this.alive = true;
+        this.holeTimer = Math.round(Math.random() * 140 + 60);
+        this.hole = false;
     }
     Player.prototype.hasCollided = function (context) {
         var xToCheck = this.x + 2 * Math.cos(this.angle);
@@ -19,7 +21,20 @@ var Player = (function () {
         }
         return false;
     };
+    Player.prototype.holeControl = function () {
+        this.holeTimer--;
+        if (this.holeTimer <= 0 && this.hole === false) {
+            this.hole = true;
+            this.holeTimer = Math.round(Math.random() * 13 + 5);
+        }
+        if (this.holeTimer <= 0 && this.hole === true) {
+            this.hole = false;
+            this.holeTimer = Math.round(Math.random() * 140 + 60);
+        }
+    };
     Player.prototype.move = function () {
+        this.oldx = this.x;
+        this.oldy = this.y;
         this.x += Math.cos(this.angle);
         this.y += Math.sin(this.angle);
     };
@@ -35,6 +50,13 @@ var Player = (function () {
         context.rect(Math.round(this.x), Math.round(this.y), 1, 1);
         context.closePath();
         context.fill();
+        if (this.hole) {
+            context.fillStyle = "#000";
+            context.beginPath();
+            context.rect(Math.round(this.oldx), Math.round(this.oldy), 1, 1);
+            context.closePath();
+            context.fill();
+        }
     };
     return Player;
 }());

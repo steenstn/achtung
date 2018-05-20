@@ -10,8 +10,6 @@ canvas {
   margin-left: auto;
   margin-right: auto;
   margin-top: 40px;
-
-
 }
 </style>
 </head>
@@ -67,13 +65,15 @@ var GameLoop = function() {
     if(players[i].hasCollided(ctx)) {
       players[i].alive = 0;
     }
+
     if(players[i].alive) {
+      players[i].holeControl();
       players[i].move();
       players[i].render(ctx);
     }
 
   }
-  gLoop = setTimeout(GameLoop, 1000 / 50);
+  gLoop = setTimeout(GameLoop, 1000 / 60);
 }
 
 var clearScreen = function() {

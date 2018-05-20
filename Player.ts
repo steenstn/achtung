@@ -5,8 +5,13 @@ class Player {
   public alive: boolean;
   private x: number;
   private y: number;
+  private oldx: number;
+  private oldy: number;
   private angle: number;
   private readonly color: string;
+  private holeTimer : number;
+  private hole: boolean;
+
 
   constructor(x: number, y: number, color: string) {
     this.x = x;
@@ -15,6 +20,8 @@ class Player {
     this.gameon = true;
     this.angle = Math.random()*2*Math.PI;
     this.alive = true;
+    this.holeTimer = Math.round(Math.random()*140+60);
+    this.hole = false;
   }
 
   hasCollided(context) {
@@ -34,7 +41,21 @@ class Player {
 
   }
 
+  holeControl() {
+    this.holeTimer--;
+    if(this.holeTimer <= 0 && this.hole === false) {
+      this.hole = true;
+      this.holeTimer = Math.round(Math.random()*13+5);
+    }
+
+    if(this.holeTimer <= 0 && this.hole === true) {
+      this.hole = false;
+      this.holeTimer = Math.round(Math.random()*140+60);
+    }
+  }
   move() {
+    this.oldx = this.x;
+    this.oldy = this.y;
     this.x += Math.cos(this.angle);
     this.y += Math.sin(this.angle);
   }
@@ -48,10 +69,19 @@ class Player {
   }
 
   render(context: any) {
+
     context.fillStyle = this.color;
     context.beginPath();
     context.rect(Math.round(this.x), Math.round(this.y), 1,1);
     context.closePath();
     context.fill();
+
+    if(this.hole) {
+      context.fillStyle = "#000";
+      context.beginPath();
+      context.rect(Math.round(this.oldx), Math.round(this.oldy), 1,1);
+      context.closePath();
+      context.fill();
+    }
   }
 }
