@@ -62,6 +62,10 @@ var GameLoop = function() {
   checkKeys();
 
   for(var i = 0; i < players.length; i++) {
+    if(!players[i].gameon) {
+      continue;
+    }
+    
     if(players[i].hasCollided(ctx)) {
       players[i].alive = 0;
     }
@@ -76,6 +80,45 @@ var GameLoop = function() {
   gLoop = setTimeout(GameLoop, 1000 / 60);
 }
 
+var introScreen = function() {
+
+    clearScreen();
+
+    for(var i = 0; i < players.length; i++) {
+      if(keyLeft[i] in keysDown) {
+        players[i].gameon = true;
+      }
+      if(keyRight[i] in keysDown) {
+        players[i].gameon = false;
+      }
+    }
+
+    ctx.font = '20px Verdana';
+    ctx.fillStyle = players[0].color;
+    ctx.fillText("(1 - Q)", 20, 50);
+    ctx.fillStyle = players[1].color;
+    ctx.fillText("(Key left - Key down)", 20, 80);
+    ctx.fillStyle = players[2].color;
+    ctx.fillText("(Z - X)", 20, 110);
+    ctx.fillStyle = players[3].color;
+    ctx.fillText("(M - ,)", 20, 140);
+
+    for(var i = 0; i < players.length; i++) {
+      if(players[i].gameon) {
+        ctx.fillStyle = players[i].color;
+        ctx.fillText("READY", 300, 50+i*30);
+      }
+    }
+
+    if(32 in keysDown) {
+      clearScreen()
+      GameLoop();
+    } else {
+    gLoop = setTimeout(introScreen, 1000 / 60);
+    }
+
+}
+
 var clearScreen = function() {
   ctx.fillStyle = '#000';
   ctx.beginPath();
@@ -84,8 +127,7 @@ var clearScreen = function() {
   ctx.fill();
 }
 
-clearScreen();
-GameLoop();
+introScreen();
 </script>
 </body>
 </html>

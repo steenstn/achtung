@@ -8,7 +8,7 @@ class Player {
   private oldx: number;
   private oldy: number;
   private angle: number;
-  private readonly color: string;
+  public readonly color: string;
   private holeTimer : number;
   private hole: boolean;
 
@@ -17,7 +17,7 @@ class Player {
     this.x = x;
     this.y = y;
     this.color = color;
-    this.gameon = true;
+    this.gameon = false;
     this.angle = Math.random()*2*Math.PI;
     this.alive = true;
     this.holeTimer = Math.round(Math.random()*140+60);
