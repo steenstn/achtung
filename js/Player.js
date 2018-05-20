@@ -19,6 +19,9 @@ var Player = (function () {
         this.angle = Math.random() * 2 * Math.PI;
     };
     Player.prototype.hasCollided = function (context) {
+        if (this.x < 0 || this.x > 1000 || this.y < 0 || this.y > 800) {
+            return true;
+        }
         if (this.hole) {
             return false;
         }
