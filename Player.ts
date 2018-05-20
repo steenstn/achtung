@@ -25,19 +25,22 @@ class Player {
   }
 
   hasCollided(context) {
-      var xToCheck = this.x + 2*Math.cos(this.angle);
-      var yToCheck = this.y + 2*Math.sin(this.angle);
-
-      var targetPixel = context.getImageData(xToCheck, yToCheck, 1, 1);
-      //context.fillText(targetPixel.data, this.x, this.y);
-      var r = targetPixel.data[0];
-      var g = targetPixel.data[1];
-      var b = targetPixel.data[2];
-
-      if(r > 0 || g > 0 || b > 0) {
-        return true;
-      }
+    if(this.hole) {
       return false;
+    }
+    var xToCheck = this.x + 2*Math.cos(this.angle);
+    var yToCheck = this.y + 2*Math.sin(this.angle);
+
+    var targetPixel = context.getImageData(xToCheck, yToCheck, 1, 1);
+
+    var r = targetPixel.data[0];
+    var g = targetPixel.data[1];
+    var b = targetPixel.data[2];
+
+    if(r > 0 || g > 0 || b > 0) {
+      return true;
+    }
+    return false;
 
   }
 

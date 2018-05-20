@@ -10,6 +10,9 @@ var Player = (function () {
         this.hole = false;
     }
     Player.prototype.hasCollided = function (context) {
+        if (this.hole) {
+            return false;
+        }
         var xToCheck = this.x + 2 * Math.cos(this.angle);
         var yToCheck = this.y + 2 * Math.sin(this.angle);
         var targetPixel = context.getImageData(xToCheck, yToCheck, 1, 1);
