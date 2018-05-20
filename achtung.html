@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  text-align: center;
+}
+canvas {
+  border:1px solid #666;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
+
+
+}
+</style>
+</head>
+<body>
+
+<script src="js/Player.js" type="text/javascript"></script>
+<canvas id='c'></canvas>
+<script>
+c = document.getElementById('c'),
+ctx = c.getContext('2d');
+x = 2;
+c.width = 1000;
+c.height = 600;
+
+var gLoop;
+var keysDown = {};
+
+var keyLeft = [49, 37, 90, 77];
+var keyRight = [81, 40, 88, 188];
+
+addEventListener("keydown", function (e) {
+	keysDown[e.keyCode] = true;
+}, false);
+
+addEventListener("keyup", function (e) {
+	delete keysDown[e.keyCode];
+}, false);
+
+var checkKeys = function () {
+
+  for(var i = 0; i < keyLeft.length; i++) {
+    if(keyLeft[i] in keysDown && (players[i].gameon && players[i].alive)) {
+      players[i].turnLeft();
+    }
+    if(keyRight[i] in keysDown && (players[i].gameon && players[i].alive)) {
+      players[i].turnRight();
+    }
+  }
+}
+
+var players = [];
+players.push(new Player(200, 300, '#F00'));
+players.push(new Player(400, 300, '#0F0'));
+players.push(new Player(600, 300, '#88F'));
+players.push(new Player(800, 300, '#FF0'));
+
+
+
+var GameLoop = function() {
+  checkKeys();
+
+  for(var i = 0; i < players.length; i++) {
+    if(players[i].hasCollided(ctx)) {
+      players[i].alive = 0;
+    }
+    if(players[i].alive) {
+      players[i].move();
+      players[i].render(ctx);
+    }
+
+  }
+  gLoop = setTimeout(GameLoop, 1000 / 50);
+}
+
+var clearScreen = function() {
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.rect(0, 0, 1000, 800);
+  ctx.closePath();
+  ctx.fill();
+}
+
+clearScreen();
+GameLoop();
+</script>
+</body>
+</html>
