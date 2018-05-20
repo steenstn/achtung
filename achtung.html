@@ -62,7 +62,11 @@ players.push(new Player(800, 300, '#FF0'));
 
 var GameLoop = function() {
   ctx.fillStyle = "#000";
-  ctx.fillRect(900, 00, 100, 180);
+  ctx.fillRect(900, 0, 100, 180);
+  ctx.strokeStyle = "#fff";
+  ctx.strokeRect(10, 10, 890, 580);
+  ctx.strokeRect(905, 10, 80, 140);
+
   checkKeys();
 
   for(var i = 0; i < players.length; i++) {
@@ -89,7 +93,7 @@ var GameLoop = function() {
     ctx.font = '12px';
 
     ctx.fillStyle = players[i].color;
-    ctx.fillText(players[i].score, 900, 30+30*i);
+    ctx.fillText(players[i].score, 910, 30+30*i);
     if(numDead >= numPlaying-1 && 32 in keysDown) {
       reset();
     }
