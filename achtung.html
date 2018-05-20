@@ -65,7 +65,7 @@ var GameLoop = function() {
   ctx.fillRect(900, 0, 100, 180);
   ctx.strokeStyle = "#fff";
   ctx.strokeRect(10, 10, 890, 580);
-  ctx.strokeRect(905, 10, 80, 140);
+  ctx.strokeRect(905, 10, 80, 120);
 
   checkKeys();
 
@@ -132,12 +132,18 @@ var introScreen = function() {
     ctx.fillStyle = players[3].color;
     ctx.fillText("(M - ,)", 20, 140);
 
+
     for(var i = 0; i < players.length; i++) {
       if(players[i].gameon) {
         numPlaying++;
         ctx.fillStyle = players[i].color;
         ctx.fillText("READY", 300, 50+i*30);
       }
+    }
+
+    if(numPlaying>= 2) {
+      ctx.fillStyle= "#fff";
+      ctx.fillText("Click SPACE to start", 390, 400);
     }
 
     if(32 in keysDown && numPlaying > 1) {
