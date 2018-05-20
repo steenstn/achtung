@@ -27,6 +27,7 @@ c.height = 600;
 var gLoop;
 var keysDown = {};
 var numPlaying = 0;
+var numDead = 0;
 
 var keyLeft = [49, 37, 90, 77];
 var keyRight = [81, 40, 88, 188];
@@ -60,6 +61,8 @@ players.push(new Player(800, 300, '#FF0'));
 
 
 var GameLoop = function() {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(900, 30, 100, 180);
   checkKeys();
 
   for(var i = 0; i < players.length; i++) {
@@ -67,8 +70,14 @@ var GameLoop = function() {
       continue;
     }
 
-    if(players[i].hasCollided(ctx)) {
+    if(players[i].alive && players[i].hasCollided(ctx)) {
       players[i].alive = 0;
+      numDead++;
+      for(var j = 0; j < players.length; j++) {
+        if(players[j].gameon && players[j].alive) {
+          players[j].score++;
+        }
+      }
     }
 
     if(players[i].alive) {
@@ -77,8 +86,23 @@ var GameLoop = function() {
       players[i].render(ctx);
     }
 
+    ctx.font = '12px';
+
+    ctx.fillStyle = players[i].color;
+    ctx.fillText(players[i].score, 900, 30+30*i);
+    if(numDead >= numPlaying-1 && 32 in keysDown) {
+      reset();
+    }
   }
   gLoop = setTimeout(GameLoop, 1000 / 60);
+}
+
+var reset = function() {
+    clearScreen();
+    for(var i = 0; i < players.length; i++) {
+      players[i].reset();
+    }
+    numDead = 0;
 }
 
 var introScreen = function() {
