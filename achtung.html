@@ -112,10 +112,6 @@ let createPlayer = (_x, _y, _color) => {
     };
 };
 var players = [];
-//players.push(new Player(200, 300, '#F00'));
-//players.push(new Player(400, 300, '#0F0'));
-//players.push(new Player(600, 300, '#88F'));
-//players.push(new Player(800, 300, '#FF0'));
 players.push(createPlayer(200, 300, '#F00'));
 players.push(createPlayer(400, 300, '#0F0'));
 players.push(createPlayer(600, 300, '#88F'));
@@ -153,21 +149,19 @@ var GameLoop = function() {
       players[i].oldy = players[i].y;
       players[i].x += Math.cos(players[i].angle);
       players[i].y += Math.sin(players[i].angle);
-      //players[i].move();
-    ctx.fillStyle = players[i].color;
-    ctx.beginPath();
-    ctx.rect(Math.round(players[i].x), Math.round(players[i].y), 1,1);
-    ctx.closePath();
-    ctx.fill();
-
-    if(players[i].hole) {
-      ctx.fillStyle = "#000";
+      ctx.fillStyle = players[i].color;
       ctx.beginPath();
-      ctx.rect(Math.round(players[i].oldx), Math.round(players[i].oldy), 1,1);
+      ctx.rect(Math.round(players[i].x), Math.round(players[i].y), 1,1);
       ctx.closePath();
       ctx.fill();
-    }
-      //players[i].render(ctx);
+
+      if(players[i].hole) {
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.rect(Math.round(players[i].oldx), Math.round(players[i].oldy), 1,1);
+        ctx.closePath();
+        ctx.fill();
+      }
     }
 
     ctx.font = '12px';
