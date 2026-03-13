@@ -89,7 +89,7 @@ let hasCollided = (player) => {
     var g = targetPixel.data[1];
     var b = targetPixel.data[2];
 
-    if(r > 0 || g > 0 || b > 0) {
+    if(r > 20 || g > 20 || b > 20) {
       return true;
     }
     return false;
