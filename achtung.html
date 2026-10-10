@@ -19,17 +19,15 @@ canvas {
 <script>
 c = document.getElementById('c'),
 ctx = c.getContext('2d');
-x = 2;
 c.width = 1000;
 c.height = 600;
 
-var gLoop;
-var keysDown = {};
-var numPlaying = 0;
-var numDead = 0;
+let keysDown = {};
+let numPlaying = 0;
+let numDead = 0;
 
-var keyLeft = [49, 37, 90, 77];
-var keyRight = [81, 40, 88, 188];
+let keyLeft = [49, 37, 90, 77];
+let keyRight = [81, 40, 88, 188];
 let INTRO_RADIUS = 100;
 
 addEventListener("keydown", function (e) {
@@ -40,9 +38,8 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
 
-var checkKeys = function () {
-
-  for(var i = 0; i < keyLeft.length; i++) {
+let checkKeys = () => {
+  for(let i = 0; i < keyLeft.length; i++) {
     if(keyLeft[i] in keysDown && (players[i].gameon && players[i].alive)) {
       players[i].angle-= 0.06;
     }
@@ -82,14 +79,14 @@ let hasCollided = (player) => {
     if(player.hole) {
       return false;
     }
-    var xToCheck = player.x + 2*Math.cos(player.angle);
-    var yToCheck = player.y + 2*Math.sin(player.angle);
+    let xToCheck = player.x + 2*Math.cos(player.angle);
+    let yToCheck = player.y + 2*Math.sin(player.angle);
 
-    var targetPixel = ctx.getImageData(Math.round(xToCheck), Math.round(yToCheck), 1, 1);
+    let targetPixel = ctx.getImageData(Math.round(xToCheck), Math.round(yToCheck), 1, 1);
 
-    var r = targetPixel.data[0];
-    var g = targetPixel.data[1];
-    var b = targetPixel.data[2];
+    let r = targetPixel.data[0];
+    let g = targetPixel.data[1];
+    let b = targetPixel.data[2];
 
     if(r > 20 || g > 20 || b > 20) {
       return true;
@@ -114,7 +111,8 @@ let createPlayer = (_x, _y, _color) => {
         introRadius: INTRO_RADIUS
     };
 };
-var players = [];
+
+let players = [];
 players.push(createPlayer(200, 300, '#F00'));
 players.push(createPlayer(400, 300, '#0F0'));
 players.push(createPlayer(600, 300, '#88F'));
@@ -148,7 +146,7 @@ let gameIntroScreen = () => {
     setTimeout(gameIntroScreen, 10);
 };
 
-var GameLoop = function() {
+let GameLoop = function() {
   ctx.fillStyle = "#000";
   ctx.fillRect(900, 0, 100, 180);
   ctx.strokeStyle = "#fff";
@@ -158,7 +156,7 @@ var GameLoop = function() {
     
   checkKeys();
 
-  for(var i = 0; i < players.length; i++) {
+  for(let i = 0; i < players.length; i++) {
     if(!players[i].gameon) {
       continue;
     }
@@ -166,7 +164,7 @@ var GameLoop = function() {
     if(players[i].alive && hasCollided(players[i])) {
       players[i].alive = 0;
       numDead++;
-      for(var j = 0; j < players.length; j++) {
+      for(let j = 0; j < players.length; j++) {
         if(players[j].gameon && players[j].alive) {
           players[j].score++;
         }
@@ -204,22 +202,22 @@ var GameLoop = function() {
         return;
     }
   }
-  gLoop = setTimeout(GameLoop, 1000 / 60);
+  setTimeout(GameLoop, 20);
 }
 
 let resetPlayers = () => {
     clearScreen();
-    for(var i = 0; i < players.length; i++) {
+    for(let i = 0; i < players.length; i++) {
       reset(players[i]);
     }
     numDead = 0;
 }
 
-var startScreen = function() {
+let startScreen = () => {
     numPlaying = 0;
     clearScreen();
 
-    for(var i = 0; i < players.length; i++) {
+    for(let i = 0; i < players.length; i++) {
       if(keyLeft[i] in keysDown) {
         players[i].gameon = true;
       }
@@ -239,7 +237,7 @@ var startScreen = function() {
     ctx.fillText("(M - ,)", 20, 140);
 
 
-    for(var i = 0; i < players.length; i++) {
+    for(let i = 0; i < players.length; i++) {
       if(players[i].gameon) {
         numPlaying++;
         ctx.fillStyle = players[i].color;
@@ -256,7 +254,7 @@ var startScreen = function() {
       clearScreen()
       gameIntroScreen();
     } else {
-      gLoop = setTimeout(startScreen, 1000 / 60);
+      setTimeout(startScreen, 1000 / 60);
     }
 }
 
