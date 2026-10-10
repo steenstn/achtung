@@ -30,6 +30,7 @@ var numDead = 0;
 
 var keyLeft = [49, 37, 90, 77];
 var keyRight = [81, 40, 88, 188];
+let INTRO_RADIUS = 100;
 
 addEventListener("keydown", function (e) {
 	keysDown[e.keyCode] = true;
@@ -58,7 +59,8 @@ let reset = (player) =>  {
     player.holeTimer = Math.round(Math.random()*140+60);
     player.hole = false;
     player.angle = Math.random()*2*Math.PI;
-  }
+    player.introRadius = INTRO_RADIUS;
+}
 
 let holeControl = (player) => {
     player.holeTimer--;
@@ -109,6 +111,7 @@ let createPlayer = (_x, _y, _color) => {
         holeTimer: Math.round(Math.random()*140+60),
         hole: false,
         score: 0,
+        introRadius: INTRO_RADIUS
     };
 };
 var players = [];
@@ -118,6 +121,32 @@ players.push(createPlayer(600, 300, '#88F'));
 players.push(createPlayer(800, 300, '#FF0'));
 
 
+let gameIntroScreen = () => {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, 1000, 1000);
+  ctx.strokeStyle = "#fff";
+  ctx.strokeRect(10, 10, 890, 580);
+  ctx.strokeRect(905, 10, 80, 120);
+
+    let currentPlayer = players.find(p => p.gameon && p.introRadius > 0);
+    
+    if (currentPlayer === undefined) {
+        clearScreen();
+        setTimeout(GameLoop);
+        return;
+    }
+
+    drawIntroCircle(currentPlayer);
+    currentPlayer.introRadius-=1;
+
+    players.filter(p => p.gameon && p.introRadius <=0).forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, 2, 2);
+    });
+
+    
+    setTimeout(gameIntroScreen, 10);
+};
 
 var GameLoop = function() {
   ctx.fillStyle = "#000";
@@ -126,6 +155,7 @@ var GameLoop = function() {
   ctx.strokeRect(10, 10, 890, 580);
   ctx.strokeRect(905, 10, 80, 120);
 
+    
   checkKeys();
 
   for(var i = 0; i < players.length; i++) {
@@ -169,13 +199,15 @@ var GameLoop = function() {
     ctx.fillStyle = players[i].color;
     ctx.fillText(players[i].score, 910, 30+30*i);
     if(numDead >= numPlaying-1 && 32 in keysDown) {
-      resetPlayers();
+        resetPlayers();
+        gameIntroScreen();
+        return;
     }
   }
   gLoop = setTimeout(GameLoop, 1000 / 60);
 }
 
-var resetPlayers = function() {
+let resetPlayers = () => {
     clearScreen();
     for(var i = 0; i < players.length; i++) {
       reset(players[i]);
@@ -183,7 +215,7 @@ var resetPlayers = function() {
     numDead = 0;
 }
 
-var introScreen = function() {
+var startScreen = function() {
     numPlaying = 0;
     clearScreen();
 
@@ -222,14 +254,13 @@ var introScreen = function() {
 
     if(32 in keysDown && numPlaying > 1) {
       clearScreen()
-      GameLoop();
+      gameIntroScreen();
     } else {
-      gLoop = setTimeout(introScreen, 1000 / 60);
+      gLoop = setTimeout(startScreen, 1000 / 60);
     }
-
 }
 
-var clearScreen = function() {
+let clearScreen = () => {
   ctx.fillStyle = '#000';
   ctx.beginPath();
   ctx.rect(0, 0, 1000, 800);
@@ -237,7 +268,15 @@ var clearScreen = function() {
   ctx.fill();
 }
 
-introScreen();
+let drawIntroCircle = (player) => {
+    ctx.strokeStyle = (player.color);
+    ctx.lineWidth = 2;
+    ctx.beginPath()
+    ctx.arc(player.x, player.y, player.introRadius, 0, Math.PI * 2);
+    ctx.stroke();
+}
+
+startScreen();
 </script>
 </body>
 </html>
